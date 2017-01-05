@@ -2,6 +2,8 @@
 Cubic spline class that is not dependent on other software.
 
 ## Usage
+Requires a compiler that can use C++11.
+
 CubicSpline accepts std::vector, std::array or standard arrays (i.e. double array[10]).
 
 To call, you must of two of the same type and the same length:

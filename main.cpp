@@ -27,7 +27,7 @@ int main() {
     }
   }
 
-  int iter = 5000;
+  int iter = 500;
 
   std::cout << "Using " << iter << " iterations" << std::endl << std::endl;
 
