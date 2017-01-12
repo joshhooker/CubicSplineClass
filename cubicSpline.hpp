@@ -64,7 +64,7 @@ CubicSpline::CubicSpline(const std::vector<double> &x, const std::vector<double>
   l[size-1] = 1.;
   u[size-1] = 0.;
   cVec[size-1] = 0.;
-  for(int i=0; i<size-1; i++) {
+  for(unsigned int i=0; i<size-1; i++) {
     assert(xVec[i+1]>xVec[i]);
     h[i] = xVec[i+1]-xVec[i];
     if(i>0) {
@@ -147,20 +147,14 @@ template <typename T> double CubicSpline::operator()(T x) const{
   assert(std::is_arithmetic<T>::value);
   double xs = static_cast<double>(x);
 
-  auto id = std::lower_bound(xVec.cbegin(), xVec.cend(), xs);
-  auto idx = std::max(int(id-xVec.cbegin())-1, 0);
+  auto id = std::lower_bound(xVec.begin(), xVec.end(), xs);
+  auto idx = std::max(int(id-xVec.begin())-1, 0);
 
   double xi = xs-xVec[idx];
   double result;
-  if(xs<xVec[0]) {
-    result = yVec[0]+bVec[0]*xi+cVec[0]*xi*xi;
-  }
-  else if(xs>xVec[size-1]) {
-    result = yVec[size-1]+bVec[size-1]*xi+cVec[size-1]*xi*xi;
-  }
-  else {
-    result = yVec[idx]+bVec[idx]*xi+cVec[idx]*xi*xi+dVec[idx]*xi*xi*xi;
-  }
+  if(idx==0) result = yVec[0]+bVec[0]*xi+cVec[0]*xi*xi;
+  else if(idx==size-1) result = yVec[size-1]+bVec[size-1]*xi+cVec[size-1]*xi*xi;
+  else result = yVec[idx]+bVec[idx]*xi+cVec[idx]*xi*xi+dVec[idx]*xi*xi*xi;
   return result;
 }
 
