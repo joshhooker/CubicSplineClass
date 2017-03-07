@@ -6,7 +6,9 @@
 #include <sstream>
 #include <vector>
 
-#include "cubicSpline.hpp"
+//#include "cubicSpline.hpp"
+
+#include "cubicSpline_nonC++11.hpp"
 
 int main() {
 
@@ -53,43 +55,46 @@ int main() {
   }
   std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
 
-  std::cout << " std::Array:" << std::endl;
-  totalSetup = 0;
-  totalEval = 0;
-  for(int i=0; i<iter; i++) {
-    auto t1 = std::chrono::high_resolution_clock::now();
-    CubicSpline f(xArray, yArray);
-    auto t2 = std::chrono::high_resolution_clock::now();
-    diff = 0.0;
-    num = 0;
-    for(double i=-1.; i<=5.0; i+=0.0034) {
-      diff += fabs(sin(2.*cos(3.*i))-f(i));
-      num++;
-    }
-    auto t3 = std::chrono::high_resolution_clock::now();
-    totalSetup += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-    totalEval += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
-  }
-  std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
+  CubicSpline f1;
+  f1.SetPoints(x, y);
 
-  std::cout << " Array:" << std::endl;
-  totalSetup = 0;
-  totalEval = 0;
-  for(int i=0; i<iter; i++) {
-    auto t1 = std::chrono::high_resolution_clock::now();
-    CubicSpline f(xArr, yArr);
-    auto t2 = std::chrono::high_resolution_clock::now();
-    diff = 0.0;
-    num = 0;
-    for(double i=-1.; i<=5.0; i+=0.0034) {
-      diff += fabs(sin(2.*cos(3.*i))-f(i));
-      num++;
-    }
-    auto t3 = std::chrono::high_resolution_clock::now();
-    totalSetup += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-    totalEval += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
-  }
-  std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
+  // std::cout << " std::Array:" << std::endl;
+  // totalSetup = 0;
+  // totalEval = 0;
+  // for(int i=0; i<iter; i++) {
+  //   auto t1 = std::chrono::high_resolution_clock::now();
+  //   CubicSpline f(xArray, yArray);
+  //   auto t2 = std::chrono::high_resolution_clock::now();
+  //   diff = 0.0;
+  //   num = 0;
+  //   for(double i=-1.; i<=5.0; i+=0.0034) {
+  //     diff += fabs(sin(2.*cos(3.*i))-f(i));
+  //     num++;
+  //   }
+  //   auto t3 = std::chrono::high_resolution_clock::now();
+  //   totalSetup += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  //   totalEval += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
+  // }
+  // std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
+
+  // std::cout << " Array:" << std::endl;
+  // totalSetup = 0;
+  // totalEval = 0;
+  // for(int i=0; i<iter; i++) {
+  //   auto t1 = std::chrono::high_resolution_clock::now();
+  //   CubicSpline f(xArr, yArr);
+  //   auto t2 = std::chrono::high_resolution_clock::now();
+  //   diff = 0.0;
+  //   num = 0;
+  //   for(double i=-1.; i<=5.0; i+=0.0034) {
+  //     diff += fabs(sin(2.*cos(3.*i))-f(i));
+  //     num++;
+  //   }
+  //   auto t3 = std::chrono::high_resolution_clock::now();
+  //   totalSetup += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+  //   totalEval += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
+  // }
+  // std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
 
   return 0;
 }

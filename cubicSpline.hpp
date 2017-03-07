@@ -39,6 +39,8 @@ SOFTWARE.
 
 class CubicSpline {
 public:
+  CubicSpline();
+  void SetPoints(const std::vector<double> &x, const std::vector<double> &y);
   CubicSpline(const std::vector<double> &x, const std::vector<double> &y);
   template <typename T, int N, int M> CubicSpline(T (&x) [N], T (&y) [M]);
   template <std::size_t N, std::size_t M> CubicSpline(std::array<double, N>& x, std::array<double, M>& y);
@@ -50,6 +52,38 @@ private:
   std::vector<double> xVec, yVec;
   std::vector<double> bVec, cVec, dVec;
 };
+
+CubicSpline::CubicSpline() {}
+
+void CubicSpline::SetPoints(const std::vector<double> &x, const std::vector<double> &y) {
+  assert(x.size() == y.size());
+  size = x.size();
+  xVec = x; yVec = y;
+  bVec.resize(size); cVec.resize(size); dVec.resize(size);
+  std::vector<double> h(size), alpha(size), l(size), z(size), u(size);
+
+  l[0] = 1.;
+  u[0] = 0.;
+  z[0] = 0.;
+  l[size-1] = 1.;
+  u[size-1] = 0.;
+  cVec[size-1] = 0.;
+  for(unsigned int i=0; i<size-1; i++) {
+    assert(xVec[i+1]>xVec[i]);
+    h[i] = xVec[i+1]-xVec[i];
+    if(i>0) {
+      alpha[i] = (3./h[i])*(yVec[i+1]-yVec[i]) - (3./h[i-1])*(yVec[i]-yVec[i-1]);
+      l[i] = 2.*(xVec[i+1]-xVec[i-1]) - h[i-1]*u[i-1];
+      u[i] = h[i]/l[i];
+      z[i] = (alpha[i]-h[i-1]*z[i-1])/l[i];
+    }
+  }
+  for(int i=size-2; i>-1; i--) {
+    cVec[i] = z[i]-u[i]*cVec[i+1];
+    bVec[i] = (yVec[i+1]-yVec[i])/h[i] - h[i]*(cVec[i+1]+2.*cVec[i])/3.;
+    dVec[i] = (cVec[i+1]-cVec[i])/(3.*h[i]);
+  }
+}
 
 CubicSpline::CubicSpline(const std::vector<double> &x, const std::vector<double> &y) {
   assert(x.size() == y.size());
@@ -147,8 +181,18 @@ template <typename T> double CubicSpline::operator()(T x) const{
   assert(std::is_arithmetic<T>::value);
   double xs = static_cast<double>(x);
 
-  auto id = std::lower_bound(xVec.begin(), xVec.end(), xs);
-  auto idx = std::max(int(id-xVec.begin())-1, 0);
+  int l = 0;
+  int h = size;
+  while(l<h) {
+    int mid = (l+h)/2;
+    if(xs <= xVec[mid]) {
+      h = mid;
+    } else {
+      l = mid+1;
+    }
+  }
+
+  int idx = l-1;
 
   double xi = xs-xVec[idx];
   double result;
@@ -161,4 +205,4 @@ template <typename T> double CubicSpline::operator()(T x) const{
 CubicSpline::~CubicSpline() {
 }
 
-#endif //SPLINE_HPP
+#endif
