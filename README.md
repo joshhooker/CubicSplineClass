@@ -2,31 +2,42 @@
 Cubic spline class that is not dependent on other software.
 
 ## Usage
-Requires a compiler that can use C++11.
+Two versions are present: a C++11 version which includes support for std::array and one that doesn't require C++11.
 
-CubicSpline accepts std::vector, std::array or standard arrays (i.e. double array[10]).
+CubicSpline accepts std::vector, std::array (C++11) or standard arrays (i.e. double array[10]).
 
-To call, you must of two of the same type and the same length:
+There are two ways to initiate the CubicSpline class:
+
+1. You can begin with an empty constructor such as:
+```C++
+CubicSpline f;
+```
+and set the two arrays via:
+```C++
+f.SetPoints(x, y);
+```
+
+2. Can input the two arrays in the constructor:
 ```C++
 CubicSpline f(x, y);
 ```
 
-You are required to have the x array/vector in order.
+You are required to have the x array/vector in order. In a future release, it can sort the vectors if they are not sorted.
 
 To get the cubic spline interpolation at position xi, call:
 ```C++
 double result = f(xi)
 ```
-xi can be an integer, float or double but will always return a double.
+xi can be an integer, float or double but will always return a double and f is the CubicSpline class.
 
-The spline does output values for positions outside of your initial range, it cannot be well trusted and not recommended.
+The spline does output values for values outside of your initial range but it cannot be well trusted and is not recommended.
 
-main.cpp included has an example on how to run the Cubic spline class with a small benchmark.
+main.cpp included has an example on how to run the CubicSpline class with a small benchmark.
 
 ## License
 MIT License
 
-Copyright (c) 2017 Joshua Hooker
+Copyright (c) 2017 Josh Hooker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
