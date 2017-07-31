@@ -35,8 +35,7 @@ The spline does output values for values outside of your initial range but it ca
 main.cpp included has an example on how to run the CubicSpline class with a small benchmark.
 
 ## License
-MIT License
-
+CubicSpline
 Copyright (c) 2017 Josh Hooker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

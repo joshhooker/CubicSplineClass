@@ -1,11 +1,27 @@
-/**
- * @file CubicSpline_nonC++11.h
- * @author Josh Hooker
- * @date 07/30/2017
- * @version 1.0
- *
- * @brief Cubic spline implimentation with generic arrays and std::vector
- *
+/*
+CubicSpline
+Copyright (c) 2017 Josh Hooker
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+This program takes a set of arrays/vectors to perform a cubic spline. CubicSpline_noC++11.h
+does not use std::array.
 */
 
 #ifndef CUBIC_SPLINE_H
@@ -40,17 +56,8 @@ private:
   void inline SetSpline();
 };
 
-/**
- * Basic CubicSpline constructor
- */
 inline CubicSpline::CubicSpline() {}
 
-/**
- * CubicSpline constructor using std::vectors
- *
- * @param x. x-vector of the spline. Needs to be in increasing order and same type as y-vector
- * @param y. y-vector of the spline. Needs to be the same type as x-vector
- */
 template<typename T> inline CubicSpline::CubicSpline(const std::vector<T> &x, const std::vector<T> &y) {
   ASSERT_WITH_MESSAGE(x.size() == y.size(),
     "In CubicSpline initialization, x vector size != y vector size\n");
@@ -62,12 +69,6 @@ template<typename T> inline CubicSpline::CubicSpline(const std::vector<T> &x, co
   SetSpline();
 }
 
-/**
- * CubicSpline constructor using arrays
- *
- * @param x. x-array of the spline. Needs to be in increasing order and same type as y-array
- * @param y. y-array of the spline. Needs to be the same type as x-array
- */
 template <typename T, int N, int M> inline CubicSpline::CubicSpline(const T (&x) [N], const T (&y) [M]) {
   ASSERT_WITH_MESSAGE(N == M,
     "In CubicSpline initialization, x array size != y array size\n");
@@ -79,12 +80,6 @@ template <typename T, int N, int M> inline CubicSpline::CubicSpline(const T (&x)
   SetSpline();
 }
 
-/**
- * CubicSpline SetPoints using std::vector. To be used when using the default constructor
- *
- * @param x. x-array of the spline. Needs to be in increasing order and same type as y-array
- * @param y. y-array of the spline. Needs to be the same type as x-array
- */
 template <typename T> inline void CubicSpline::SetPoints(const std::vector<T> &x, const std::vector<T> &y) {
   ASSERT_WITH_MESSAGE(x.size() == y.size(),
     "In CubicSpline SetPoints, x vector size != y vector size\n");
@@ -95,12 +90,6 @@ template <typename T> inline void CubicSpline::SetPoints(const std::vector<T> &x
   SetSpline();
 }
 
-/**
- * CubicSpline SetPoints using arrays. To be used when using the default constructor
- *
- * @param x. x-array of the spline. Needs to be in increasing order and same type as y-array
- * @param y. y-array of the spline. Needs to be the same type as x-array
- */
 template <typename T, int N, int M> inline void CubicSpline::SetPoints(const T (&x) [N], const T (&y) [M]) {
   ASSERT_WITH_MESSAGE(N == M,
     "In CubicSpline SetPoints, x array size != y array size\n");
@@ -139,12 +128,6 @@ void inline CubicSpline::SetSpline() {
   }
 }
 
-/**
- * CubicSpline Operator ().
- *
- * @param x. Position where you want to evaluate the spline
- * @return the evaluation of the spline as a double
- */
 template <typename T> inline double CubicSpline::operator()(T x) const{
   double xs = static_cast<double>(x);
 
