@@ -84,7 +84,7 @@ template <typename T, int N, int M> inline CubicSpline::CubicSpline(const T (&x)
 
 template <typename T, std::size_t N, std::size_t M> inline CubicSpline::CubicSpline(const std::array<T, N>& x, const std::array<T, M>& y) {
     ASSERT_WITH_MESSAGE(N == M,
-        "In CubicSpline initialization, x array size != y array size\n");
+                        "In CubicSpline initialization, x array size != y array size\n");
     size = N;
     xVec.resize(size); yVec.resize(size);
     std::copy(x.begin(), x.begin() + size, xVec.begin());
@@ -96,7 +96,7 @@ template <typename T, std::size_t N, std::size_t M> inline CubicSpline::CubicSpl
 
 template <typename T> inline void CubicSpline::SetPoints(const std::vector<T> &x, const std::vector<T> &y) {
     ASSERT_WITH_MESSAGE(x.size() == y.size(),
-        "In CubicSpline SetPoints, x vector size != y vector size\n");
+                        "In CubicSpline SetPoints, x vector size != y vector size\n");
     size = x.size();
     xVec = x; yVec = y;
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
@@ -106,7 +106,7 @@ template <typename T> inline void CubicSpline::SetPoints(const std::vector<T> &x
 
 template <typename T, int N, int M> inline void CubicSpline::SetPoints(const T (&x) [N], const T (&y) [M]) {
     ASSERT_WITH_MESSAGE(N == M,
-        "In CubicSpline SetPoints, x array size != y array size\n");
+                        "In CubicSpline SetPoints, x array size != y array size\n");
     size = N;
     xVec.assign(x, x + N); yVec.assign(y, y + M);
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
@@ -116,7 +116,7 @@ template <typename T, int N, int M> inline void CubicSpline::SetPoints(const T (
 
 template <typename T, std::size_t N, std::size_t M> inline void CubicSpline::SetPoints(const std::array<T, N>& x, const std::array<T, M>& y) {
     ASSERT_WITH_MESSAGE(N == M,
-        "In CubicSpline SetPoints, x array size != y array size\n");
+                        "In CubicSpline SetPoints, x array size != y array size\n");
     size = N;
     xVec.resize(size); yVec.resize(size);
     std::copy(x.begin(), x.begin() + size, xVec.begin());
@@ -137,7 +137,7 @@ void inline CubicSpline::SetSpline() {
     cVec[size - 1] = 0.;
     for(unsigned int i = 0; i < size - 1; i++) {
         ASSERT_WITH_MESSAGE(xVec[i + 1] > xVec[i],
-            "In CubicSpline SetSpline, x array is not sorted from smallest to largest\n");
+                            "In CubicSpline SetSpline, x array is not sorted from smallest to largest\n");
         h[i] = xVec[i + 1] - xVec[i];
         if(i > 0) {
             alpha[i] = (3./h[i])*(yVec[i + 1] - yVec[i]) - (3./h[i - 1])*(yVec[i] - yVec[i - 1]);
