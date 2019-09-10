@@ -19,28 +19,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-This program takes a set of arrays/vectors to perform a cubic spline. CubicSpline.h
-has options to use std::array so it requires C++11.
 */
 
-#ifndef CUBIC_SPLINE_H
-#define CUBIC_SPLINE_H
+#ifndef CubicSpline_h
+#define CubicSpline_h
 
 #include <array>
 #include <cassert>
 #include <vector>
 
 #define ASSERT_WITH_MESSAGE(condition, message)                                \
-    do {                                                                       \
-        if(!(condition)) {                                                     \
-            printf((message));                                                 \
-        }                                                                      \
-        assert((condition));                                                   \
-    } while(false)
+  do {                                                                         \
+    if (!(condition)) {                                                        \
+      printf((message));                                                       \
+    }                                                                          \
+    assert((condition));                                                       \
+  } while (false)
 
 class CubicSpline {
-public:
+    public:
     CubicSpline();
     template <typename T> CubicSpline(const std::vector<T> &x, const std::vector<T> &y);
     template <typename T, int N, int M> CubicSpline(const T (&x) [N], const T (&y) [M]);
@@ -51,7 +48,7 @@ public:
     template <typename T> double operator()(T x) const;
     ~CubicSpline();
 
-private:
+    private:
     size_t size;
     std::vector<double> xVec, yVec;
     std::vector<double> bVec, cVec, dVec;
@@ -65,6 +62,7 @@ inline CubicSpline::CubicSpline() {}
 template<typename T> inline CubicSpline::CubicSpline(const std::vector<T> &x, const std::vector<T> &y) {
     ASSERT_WITH_MESSAGE(x.size() == y.size(),
                         "In CubicSpline initialization, x vector size != y vector size\n");
+    assert(x.size() == y.size());
     size = x.size();
     xVec = x; yVec = y;
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
@@ -75,8 +73,9 @@ template<typename T> inline CubicSpline::CubicSpline(const std::vector<T> &x, co
 template <typename T, int N, int M> inline CubicSpline::CubicSpline(const T (&x) [N], const T (&y) [M]) {
     ASSERT_WITH_MESSAGE(N == M,
                         "In CubicSpline initialization, x array size != y array size\n");
+    assert(N == M);
     size = N;
-    xVec.assign(x, x + N); yVec.assign(y, y + M);
+    xVec.assign(x, x+N); yVec.assign(y, y+M);
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
 
     SetSpline();
@@ -87,8 +86,8 @@ template <typename T, std::size_t N, std::size_t M> inline CubicSpline::CubicSpl
                         "In CubicSpline initialization, x array size != y array size\n");
     size = N;
     xVec.resize(size); yVec.resize(size);
-    std::copy(x.begin(), x.begin() + size, xVec.begin());
-    std::copy(y.begin(), y.begin() + size, yVec.begin());
+    std::copy(x.begin(), x.begin()+size, xVec.begin());
+    std::copy(y.begin(), y.begin()+size, yVec.begin());
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
 
     SetSpline();
@@ -119,8 +118,8 @@ template <typename T, std::size_t N, std::size_t M> inline void CubicSpline::Set
                         "In CubicSpline SetPoints, x array size != y array size\n");
     size = N;
     xVec.resize(size); yVec.resize(size);
-    std::copy(x.begin(), x.begin() + size, xVec.begin());
-    std::copy(y.begin(), y.begin() + size, yVec.begin());
+    std::copy(x.begin(), x.begin()+size, xVec.begin());
+    std::copy(y.begin(), y.begin()+size, yVec.begin());
     bVec.resize(size); cVec.resize(size); dVec.resize(size);
 
     SetSpline();
@@ -138,6 +137,7 @@ void inline CubicSpline::SetSpline() {
     for(unsigned int i = 0; i < size - 1; i++) {
         ASSERT_WITH_MESSAGE(xVec[i + 1] > xVec[i],
                             "In CubicSpline SetSpline, x array is not sorted from smallest to largest\n");
+        assert(xVec[i + 1] > xVec[i]);
         h[i] = xVec[i + 1] - xVec[i];
         if(i > 0) {
             alpha[i] = (3./h[i])*(yVec[i + 1] - yVec[i]) - (3./h[i - 1])*(yVec[i] - yVec[i - 1]);
@@ -160,13 +160,16 @@ template <typename T> inline double CubicSpline::operator()(T x) const{
     int h = size;
     while(l < h) {
         int mid = (l + h)/2;
-        if(xs <= xVec[mid]) h = mid;
-        else l = mid + 1;
+        if(xs <= xVec[mid]) {
+            h = mid;
+        } else {
+            l = mid + 1;
+        }
     }
 
-    size_t idx = l - 1;
+    size_t idx = (l == 0) ? 0 : l - 1;
 
-    double xi = xs - xVec[idx];
+    double xi = xs-xVec[idx];
     double result;
     if(idx == 0) result = yVec[0] + bVec[0]*xi + cVec[0]*xi*xi;
     else if(idx == size - 1) result = yVec[size - 1] + bVec[size - 1]*xi + cVec[size - 1]*xi*xi;
@@ -174,6 +177,6 @@ template <typename T> inline double CubicSpline::operator()(T x) const{
     return result;
 }
 
-inline CubicSpline::~CubicSpline() {}
+inline CubicSpline::~CubicSpline() = default;
 
 #endif
