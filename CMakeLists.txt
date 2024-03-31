@@ -9,4 +9,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 file(GLOB sources ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/*.h)
 
+set(_SCRIPTS
+        sample_data.dat
+)
+
+foreach(_script ${_SCRIPTS})
+    configure_file(
+            ${PROJECT_SOURCE_DIR}/${_script}
+            ${PROJECT_BINARY_DIR}/${_script}
+            COPYONLY
+    )
+endforeach()
+
 add_executable(spline ${sources} ${headers})
