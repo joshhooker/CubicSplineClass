@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
-#include <sstream>
 #include <vector>
 
 #include "CubicSpline.h"
@@ -28,7 +27,6 @@ int main() {
     }
 
     int iter = 5000;
-    // int iter = 1;
 
     std::cout << "Using " << iter << " iterations" << std::endl << std::endl;
 
@@ -91,38 +89,6 @@ int main() {
         totalEval += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
     }
     std::cout << "   Avg. Setup Time: " << totalSetup/iter << " us. Avg. Eval Time for "<< num << " calls: " << totalEval/iter << " us. Avg. diff: " << diff/num << std::endl;
-
-    bool quadratic, linear;
-
-    // Sample Data
-    std::cout << "\nRunning Sample Data\n";
-
-    std::vector<double> sample_x_vec, sample_y_vec;
-    std::ifstream in_file("sample_data.dat");
-
-    double sample_y, sample_x;
-    while (in_file >> sample_y >> sample_x) {
-        sample_x_vec.push_back(sample_x);
-        sample_y_vec.push_back(sample_y);
-    }
-
-    in_file.close();
-
-    CubicSpline cs_cubic_sample, cs_quadratic_sample, cs_linear_sample;
-    cs_cubic_sample.SetPoints(sample_x_vec, sample_y_vec);
-    cs_quadratic_sample.SetPoints(sample_x_vec, sample_y_vec, quadratic=true);
-    cs_linear_sample.SetPoints(sample_x_vec, sample_y_vec, quadratic=false, linear=true);
-
-    std::ofstream out_file("spline_comparison.dat", std::ofstream::out);
-
-    for (double x_value = 0; x_value < 1.0; x_value += 1e-4) {
-        double value_cubic = cs_cubic_sample(x_value);
-        double value_quadratic = cs_quadratic_sample(x_value);
-        double value_linear = cs_linear_sample(x_value);
-        out_file << x_value << '\t' << value_cubic << '\t' << value_quadratic << '\t' << value_linear << '\n';
-    }
-    out_file.flush();
-    out_file.close();
 
     return 0;
 }
